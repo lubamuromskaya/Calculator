@@ -1,3 +1,3 @@
 Simple calculator
 
-![Screenshot_1636382335](https://user-images.githubusercontent.com/56773665/140762808-655ddbb9-134d-4917-b30e-40304b6bb75b.png)
+![photo_2021-11-08_17-48-15](https://user-images.githubusercontent.com/56773665/140763188-1b017f9a-c7a2-4d77-8b79-8c38f515ac50.jpg)
