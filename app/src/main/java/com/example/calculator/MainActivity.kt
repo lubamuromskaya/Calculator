@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import java.lang.reflect.InvocationTargetException
 
 class MainActivity : AppCompatActivity() {
     var result: TextView? = null
@@ -22,7 +23,6 @@ class MainActivity : AppCompatActivity() {
     fun onDigit(view: View) {
         val value = (view as Button).text
         result?.append(value)
-
         isLastDigit = true
     }
 
@@ -40,29 +40,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // try to add possibility for second number to be negative
-    private fun isPossibleToAddOperator(sentence: String, operatorToAdd: String): Boolean {
-        if (sentence.startsWith("-"))
-            return true
-
-        if (!sentence.contains("+")
-            && !sentence.contains("-")
-            && !sentence.contains("*")
-            && !sentence.contains("/")) {
-            return true
-        }
-
-        if ((operatorToAdd == "-")
-            && ( !sentence.contains("*-")
-                    || !sentence.contains("/-")
-                    || !sentence.contains("+-")
-                    || !sentence.contains("--")) ) {
-            return true
-        }
-
-        return false
-    }
-
+    // function to add the possibility for the second number to be negative
+    // bc minus can be the operator and can be the negative sign
     fun onMinus(view: View) {
         if (isLastDigit)
             return onOperator(view)
@@ -101,11 +80,29 @@ class MainActivity : AppCompatActivity() {
         return newResult
     }
 
+    // this function is for ignoring multiple taps on equal sign
+    // sentence is incorrect when it contains only one number, ex 200, -20, 10.5
+    private fun isCorrectSentence(sentence: String): Boolean {
+        var sentence: String = sentence
+        if (sentence.startsWith("-"))
+            sentence = sentence.substring(1)
+        return sentence.contains("+")
+                || sentence.contains("-")
+                || sentence.contains("*")
+                || sentence.contains("/")
+    }
+
     fun onEqual(view: View) {
         if (isLastDigit) {
             var sentence = result?.text.toString()
 
-            try {
+            if (!isCorrectSentence(sentence)) {
+                result?.text = sentence
+                isSecondNumberNegative = false
+                return
+            }
+
+            else try {
                 // for remembering negative signs
                 var firstPrefix = ""
                 val secondPrefix = if (isSecondNumberNegative) "-" else ""
@@ -119,8 +116,17 @@ class MainActivity : AppCompatActivity() {
                 // "2 + 3" -> [2, 3]
                 val numbersInSentence: List<String> = sentence.split("+", "-", "*", "/")
 
-                var first = numbersInSentence[0]
-                var second = numbersInSentence[1]
+                var first: String = ""
+                var second: String = ""
+
+                try {
+                    first = numbersInSentence[0]
+                    second = numbersInSentence[1]
+                } catch (e: InvocationTargetException) {
+                    result?.text = sentence
+                    isSecondNumberNegative = false
+                    return
+                }
 
                 // add negative signs if needed
                 if (firstPrefix.isNotEmpty())
@@ -140,7 +146,7 @@ class MainActivity : AppCompatActivity() {
                 isSecondNumberNegative = false
 
             } catch (e: ArithmeticException) {
-                println(e)
+                println(e.message)
             }
 
         }
