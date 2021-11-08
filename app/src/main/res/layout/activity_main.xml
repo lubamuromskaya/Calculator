@@ -226,7 +226,7 @@
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:textSize="20sp"
-            android:onClick="onOperator"
+            android:onClick="onMinus"
             android:backgroundTint="@color/action_buttons"
             android:text="@string/minus" />
     </LinearLayout>

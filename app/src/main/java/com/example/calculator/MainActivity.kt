@@ -10,6 +10,7 @@ class MainActivity : AppCompatActivity() {
     var result: TextView? = null
     var isLastDigit: Boolean = false
     var isContainsDot: Boolean = false
+    var isSecondNumberNegative: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     fun onClear(view: View) {
         result?.text = ""
         isContainsDot = false
+        isSecondNumberNegative = false
     }
 
     fun onDot(view: View) {
@@ -59,6 +61,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         return false
+    }
+
+    fun onMinus(view: View) {
+        if (isLastDigit)
+            return onOperator(view)
+        else
+            isSecondNumberNegative = true
     }
 
     // check if any of operators already added
@@ -99,21 +108,12 @@ class MainActivity : AppCompatActivity() {
             try {
                 // for remembering negative signs
                 var firstPrefix = ""
-                var secondPrefix = ""
+                val secondPrefix = if (isSecondNumberNegative) "-" else ""
 
                 // delete and remember negative sign in the first number
                 if (sentence.startsWith("-")) {
                     firstPrefix = "-"
                     sentence = sentence.substring(1)
-                }
-
-                // delete and remember negative sign in the second number
-                if (sentence.contains("+-")
-                    || sentence.contains("--")
-                    || sentence.contains("*-")
-                    || sentence.contains("/-")) {
-                    secondPrefix = "-"
-                    sentence = sentence.replaceFirst("-", "")
                 }
 
                 // "2 + 3" -> [2, 3]
@@ -136,6 +136,8 @@ class MainActivity : AppCompatActivity() {
                     sentence.contains("-") -> (first.toDouble() - second.toDouble()).toString()
                     else -> sentence
                 })
+
+                isSecondNumberNegative = false
 
             } catch (e: ArithmeticException) {
                 println(e)
