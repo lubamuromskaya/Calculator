@@ -16,4 +16,5 @@
     <string name="minus">-</string>
     <string name="clear">clear</string>
     <string name="equals">=</string>
+    <string name="dot">.</string>
 </resources>
