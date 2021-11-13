@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
     // 155.0 -> 155
     private fun removeZeroAfterDot(result: String): String {
         var newResult = result
-        if (result.contains(".0"))
+        if (result.endsWith(".0"))
             newResult = result.substring(0, result.length-2)
         return newResult
     }
@@ -99,6 +99,7 @@ class MainActivity : AppCompatActivity() {
             if (!isCorrectSentence(sentence)) {
                 result?.text = sentence
                 isSecondNumberNegative = false
+                isContainsDot = false
                 return
             }
 
@@ -144,6 +145,7 @@ class MainActivity : AppCompatActivity() {
                 })
 
                 isSecondNumberNegative = false
+                isContainsDot = false
 
             } catch (e: ArithmeticException) {
                 println(e.message)
